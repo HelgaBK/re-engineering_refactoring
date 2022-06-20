@@ -1,32 +1,46 @@
 package refactoring;
+
 public class Game {
     private char _lastSymbol = ' ';
     private Board _board = new Board();
 
     public void Play(char symbol, int x, int y) throws Exception {
-        //in case the first move
-        if (_lastSymbol == ' ') {
-            //when the player is X
-            if (symbol == 'O') {
-                throw new Exception("Attention! Invalid first player");
+        if (isFirstMove()) {
+            if (isPlaterO(symbol)) {
+                throw new Exception("Invalid first player");
             }
-        }
-        //in case not first move but 
-        /****player repeated*/
-        else if (symbol == _lastSymbol) {
-            throw new Exception("Attention! Invalid next player");
-        }
-        
-        else if (_board.TileAt(x, y).Symbol != ' ') {
-            throw new Exception("Attention! Invalid position");
+        } else if (isRepeatedPlay(symbol)) {
+            throw new Exception("Invalid next player");
+        } else if (isMarked(x, y)) {
+            throw new Exception("Invalid position");
         }
 
+        updateGameState(symbol, x, y);
+    }
+
+    private void updateGameState(char symbol, int x, int y) {
         _lastSymbol = symbol;
         _board.AddTileAt(symbol, x, y);
     }
-    public char TheWinner() {
-        //if the positi
-        //ons in first row are taken
+
+    private boolean isMarked(int x, int y) {
+        return _board.TileAt(x, y).Symbol != ' ';
+    }
+
+    private boolean isRepeatedPlay(char symbol) {
+        return symbol == _lastSymbol;
+    }
+
+    private boolean isPlaterO(char symbol) {
+        return symbol == 'O';
+    }
+
+    private boolean isFirstMove() {
+        return _lastSymbol == ' ';
+    }
+
+    public char Winner() {
+        //if the positions in first row are taken
         if (_board.TileAt(0, 0).Symbol != ' ' &&
                 _board.TileAt(0, 1).Symbol != ' ' &&
                 _board.TileAt(0, 2).Symbol != ' ') {
@@ -54,14 +68,12 @@ public class Game {
         //if the positions in first row are taken
         if (_board.TileAt(2, 0).Symbol != ' ' &&
                 _board.TileAt(2, 1).Symbol != ' ' &&
-                _board.TileAt(2, 2).Symbol != ' ') 
-                {
+                _board.TileAt(2, 2).Symbol != ' ') {
             //if middle row is full with same symbol
             if (_board.TileAt(2, 0).Symbol ==
                     _board.TileAt(2, 1).Symbol &&
                     _board.TileAt(2, 2).Symbol ==
                             _board.TileAt(2, 1).Symbol) {
-                
                 return _board.TileAt(2, 0).Symbol;
             }
         }
@@ -69,4 +81,3 @@ public class Game {
         return ' ';
     }
 }
-
