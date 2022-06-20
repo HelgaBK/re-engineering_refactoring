@@ -1,30 +1,48 @@
 package refactoring;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
-    private List<Tile> _plays = new ArrayList<>();
+    private final List<Tile> tiles = new ArrayList<>();
 
     public Board() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                Tile tile = new Tile();
-                tile.X = i;
-                tile.Y = j;
-                tile.Symbol = ' ';
-                _plays.add(tile);
+        for (int row = 0; row < 3; row++) {
+            for (int column = 0; column < 3; column++) {
+                tiles.add(Tile.empty(Position.from(row, column)));
             }
         }
     }
-    public Tile TileAt(int x, int y) {
-        for (Tile t : _plays) {
-            if (t.X == x && t.Y == y) {
-                return t;
-            }
-        }
-        return null;
+
+    public Tile getTile(Position position) {
+        return tiles.stream().filter(t -> t.getPosition().equals(position)).findFirst().orElse(null);
     }
-    public void AddTileAt(char symbol, int x, int y) {
-        TileAt(x, y).Symbol = symbol;
+
+    public void markTileAt(Mark mark, Position position) {
+        getTile(position).setMark(mark);
+    }
+
+    boolean threeInRow() {
+        return validateRow(0) || validateRow(1) || validateRow(2);
+    }
+
+    private boolean validateRow(int x) {
+        if (isNotMarked(x)) {
+            return false;
+        }
+
+        return isThreeInRow(x, getTile(Position.from(x, 0)));
+    }
+
+    private boolean isNotMarked(int x) {
+        return !isMarked(Position.from(x, 0));
+    }
+
+    private boolean isThreeInRow(int x, Tile firstTile) {
+        return getTile(Position.from(x, 1)).hasSameMarkAs(firstTile) && getTile(Position.from(x, 2)).hasSameMarkAs(firstTile);
+    }
+
+    boolean isMarked(Position position) {
+        return getTile(position).getMark() != Mark.NONE;
     }
 }
