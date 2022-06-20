@@ -1,18 +1,21 @@
 package refactoring;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 public class GameActivity {
     private Game game;
+
     @BeforeEach
     void setUp() {
         game = new Game();
     }
 
     @Test
-    public void not_allow_player_to_go_first() {
+    public void not_allow_player_oto_play_first() {
         Throwable thrown = catchThrowable(() -> game.Play('O', 0, 0));
 
         assertThat(thrown).isInstanceOf(Exception.class);
@@ -26,6 +29,7 @@ public class GameActivity {
 
         assertThat(thrown).isInstanceOf(Exception.class);
     }
+
     @Test
     public void not_allow_player_to_play_in_last_played_position() throws Exception {
         game.Play('X', 0, 0);
@@ -38,7 +42,6 @@ public class GameActivity {
     @Test
     public void not_allow_player_to_play_in_any_played_position() throws Exception {
         game.Play('X', 0, 0);
-
         game.Play('O', 1, 0);
 
         Throwable thrown = catchThrowable(() -> game.Play('X', 0, 0));
@@ -49,17 +52,13 @@ public class GameActivity {
     @Test
     public void declare_player_x_as_a_winner_if_three_in_top_row() throws Exception {
         game.Play('X', 0, 0);
-
         game.Play('O', 1, 0);
-
         game.Play('X', 0, 1);
-
         game.Play('O', 1, 1);
-
         game.Play('X', 0, 2);
 
-        char winner = game.Winner();
-        
+        char winner = game.winner();
+
         assertThat(winner).isEqualTo('X');
     }
 
@@ -72,7 +71,7 @@ public class GameActivity {
         game.Play('X', 1, 1);
         game.Play('O', 0, 2);
 
-        char winner = game.Winner();
+        char winner = game.winner();
 
         assertThat(winner).isEqualTo('O');
     }
@@ -85,7 +84,7 @@ public class GameActivity {
         game.Play('O', 0, 1);
         game.Play('X', 1, 2);
 
-        char winner = game.Winner();
+        char winner = game.winner();
 
         assertThat(winner).isEqualTo('X');
     }
@@ -99,7 +98,7 @@ public class GameActivity {
         game.Play('X', 2, 1);
         game.Play('O', 1, 2);
 
-        char winner = game.Winner();
+        char winner = game.winner();
 
         assertThat(winner).isEqualTo('O');
     }
@@ -112,7 +111,7 @@ public class GameActivity {
         game.Play('O', 0, 1);
         game.Play('X', 2, 2);
 
-        char winner = game.Winner();
+        char winner = game.winner();
 
         assertThat(winner).isEqualTo('X');
     }
@@ -126,7 +125,7 @@ public class GameActivity {
         game.Play('X', 1, 1);
         game.Play('O', 2, 2);
 
-        char winner = game.Winner();
+        char winner = game.winner();
 
         assertThat(winner).isEqualTo('O');
     }
